@@ -28,14 +28,16 @@ class MainTest {
     fun `add links test`() = runBlocking {
         val timeStamp = Instant.now().epochSecond.toDouble()
 
-        val resPut = putLinks("{\n" +
-                    "  \"links\": [\n" +
-                    "    \"https://ya.ru\",\n" +
-                    "    \"https://ya.ru?q=123\",\n" +
-                    "    \"funbox.ru\",\n" +
-                    "    \"https://stackoverflow.com/questions/11828270/how-to-exit-the-vim-editor\"\n" +
-                    "  ]\n" +
-                    "}")
+        val resPut = putLinks("""
+            {
+              "links": [
+                "https://ya.ru",
+                "https://ya.ru?q=123",
+                "funbox.ru",
+                "https://stackoverflow.com/questions/11828270/how-to-exit-the-vim-editor"
+              ]
+            }
+        """)
 
         assert(Json.parse(Status.serializer(), resPut).status == "ok")
 
@@ -46,14 +48,16 @@ class MainTest {
 
     @Test
     fun `wrong domain test`() = runBlocking {
-        val resPut = putLinks("{\n" +
-                "  \"links\": [\n" +
-                "    \"garrrrrbage\",\n" +
-                "    \"https://ya.ru?q=123\",\n" +
-                "    \"funbox.ru\",\n" +
-                "    \"https://stackoverflow.com/questions/11828270/how-to-exit-the-vim-editor\"\n" +
-                "  ]\n" +
-                "}")
+        val resPut = putLinks("""
+            {
+              "links": [
+                "garrrrrbage",
+                "https://ya.ru?q=123",
+                "funbox.ru",
+                "https://stackoverflow.com/questions/11828270/how-to-exit-the-vim-editor"
+              ]
+            }
+        """)
 
         Json.parse(Status.serializer(), resPut).let {
             assert(it.status.contains("failed"))
